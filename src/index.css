@@ -1,0 +1,136 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  color-scheme: light dark;
+  color: rgba(255, 255, 255, 0.87);
+  background-color: #242424;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+a {
+  font-weight: 500;
+  color: #646cff;
+  text-decoration: inherit;
+}
+a:hover {
+  color: #535bf2;
+}
+
+body {
+  margin: 0;
+  display: flex;
+  place-items: center;
+  min-width: 320px;
+  min-height: 100vh;
+}
+
+h1 {
+  font-size: 3.2em;
+  line-height: 1.1;
+}
+
+button {
+  border-radius: 8px;
+  border: 1px solid transparent;
+  padding: 0.6em 1.2em;
+  font-size: 1em;
+  font-weight: 500;
+  font-family: inherit;
+  background-color: #1a1a1a;
+  cursor: pointer;
+  transition: border-color 0.25s;
+}
+button:hover {
+  border-color: #646cff;
+}
+button:focus,
+button:focus-visible {
+  outline: 4px auto -webkit-focus-ring-color;
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    color: #213547;
+    background-color: #ffffff;
+  }
+  a:hover {
+    color: #747bff;
+  }
+  button {
+    background-color: #f9f9f9;
+  }
+}
+
+
+.user-card.dancing img {
+  animation: wiggle 0.5s ease-in-out infinite;
+}
+
+@keyframes wiggle {
+  0% { transform: rotate(0deg); }
+  25% { transform: rotate(3deg); }
+  75% { transform: rotate(-3deg); }
+  100% { transform: rotate(0deg); }
+}
+
+.user-container {
+  position: absolute;
+  width: 64px;
+  height: 64px;
+}
+
+.sprite-layer {
+  position: relative;
+  width: 32px;
+  height: 32px;
+  margin: 0 auto;
+  z-index: 1;
+}
+
+.comment-layer {
+  position: absolute;
+  top: -3rem; /* ここを少し上に調整 */
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 2;
+  pointer-events: none;
+}
+
+.sprite {
+  background-repeat: no-repeat;
+  image-rendering: pixelated;
+  background-size: auto;
+}
+
+/* 各方向ごとにフレームを横に切り出すだけ */
+@keyframes walk-down {
+  from { background-position-x: 0px; }
+  to { background-position-x: -96px; } /* 32px × 3 = 96px */
+}
+@keyframes walk-left {
+  from { background-position-x: 0px; }
+  to { background-position-x: -96px; }
+}
+@keyframes walk-right {
+  from { background-position-x: 0px; }
+  to { background-position-x: -96px; }
+}
+@keyframes walk-up {
+  from { background-position-x: 0px; }
+  to { background-position-x: -96px; }
+}
+
+
+.walking {
+  animation: walk 0.6s steps(3) infinite;
+}
