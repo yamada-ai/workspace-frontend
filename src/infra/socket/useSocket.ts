@@ -9,7 +9,9 @@ export const useSocket = () => {
   const { updateUser } = useUserStore();
 
   useEffect(() => {
-    const socket = new WebSocket("wss://localhost/ws");
+    // 環境変数からWebSocket URLを取得、デフォルトはローカル開発環境
+    const wsUrl = import.meta.env.VITE_WS_URL || "ws://localhost:8000/ws";
+    const socket = new WebSocket(wsUrl);
 
     socket.onopen = () => {
       console.log("✅ WebSocket接続成功");

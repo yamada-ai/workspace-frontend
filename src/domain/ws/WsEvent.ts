@@ -13,8 +13,11 @@ export interface BaseWsEvent {
 export interface SessionStartEvent extends BaseWsEvent {
   type: WsEventType.SessionStart;
   id: number;
+  user_id: number;
   user_name: string;
   work_name: string;
+  tier: number;
+  icon?: string;
   start_time: string;
   planned_end: string;
 }
@@ -22,6 +25,8 @@ export interface SessionStartEvent extends BaseWsEvent {
 export interface SessionEndEvent extends BaseWsEvent {
   type: WsEventType.SessionEnd;
   id: number;
+  user_id: number;
+  actual_end: string;
 }
 
 // 全体のユニオン

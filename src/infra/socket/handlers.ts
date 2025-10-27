@@ -6,17 +6,30 @@ import { Area } from "../../domain/area/Area";
 import { registerUser } from "../../app/registerUser";
 import { useUserViewStore } from "../cache/UserViewStore";
 
+// Tier番号からArea enumへの変換
+function tierToArea(tier: number): Area {
+  switch (tier) {
+    case 1: return Area.Tier1;
+    case 2: return Area.Tier2;
+    case 3: return Area.Tier3;
+    default: return Area.Tier1; // デフォルト
+  }
+}
+
 // セッション開始時の処理
 export function handleSessionStart(msg: SessionStartEvent) {
   const { setComment } = useUserViewStore.getState();
 
+  const area = tierToArea(msg.tier);
+  const icon = msg.icon || "princess.png";
+
   const user = new UserModel(
     msg.id as ID<UserModel>,
     msg.user_name,
-    msg.work_name, 
-    "princess.png",
+    msg.work_name,
+    icon,
     UserState.Idle,
-    Area.Tier1
+    area
   );
   registerUser(user);
   setComment(user.id, `${msg.user_name}が「${msg.work_name}」開始`);
