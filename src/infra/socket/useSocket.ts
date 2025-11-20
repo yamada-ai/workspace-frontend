@@ -4,13 +4,38 @@ import { useUserStore } from "../cache/useUserStore";
 import { WsEvent, WsEventType } from "../../domain/ws/WsEvent";
 import { registerUser } from "../../app/registerUser";
 import { handleSessionStart, handleSessionEnd } from "./handlers";
+import { fetchActiveSessions } from "../api/sessions";
 
 export const useSocket = () => {
   const { updateUser } = useUserStore();
 
   useEffect(() => {
-    // 環境変数からWebSocket URLを取得、デフォルトはローカル開発環境
-    const wsUrl = import.meta.env.VITE_WS_URL || "ws://localhost:8000/ws";
+    // 初期ロード: 既存のアクティブセッションを取得
+    fetchActiveSessions()
+      .then((data) => {
+        console.log(`📥 初期ロード: ${data.sessions.length}件のアクティブセッション`);
+        data.sessions.forEach((session) => {
+          // SessionInfoをSessionStartEvent形式に変換してhandleSessionStart再利用
+          handleSessionStart({
+            type: WsEventType.SessionStart,
+            id: session.session_id,
+            user_id: session.user_id,
+            user_name: session.user_name,
+            work_name: session.work_name,
+            tier: session.tier,
+            icon: session.icon_id?.toString(),
+            start_time: session.start_time,
+            planned_end: session.planned_end,
+          });
+        });
+      })
+      .catch((err) => {
+        console.error("❌ 初期ロード失敗:", err);
+      });
+
+    // 環境変数からWebSocket URLを取得、デフォルトは相対パス（Nginx経由）
+    // 直接アクセスの場合は VITE_WS_URL=ws://localhost:8000/ws を設定
+    const wsUrl = import.meta.env.VITE_WS_URL || `ws://${window.location.host}/ws`;
     const socket = new WebSocket(wsUrl);
 
     socket.onopen = () => {
