@@ -1,12 +1,12 @@
 import { useEffect } from 'react';
-import { ellipsis } from '../../domain/utils/string'; 
+import { ellipsis } from '../../domain/utils/string';
 import { UserModel } from '../../domain/user/UserModel';
 import { useUserViewStore } from '../../infra/cache/UserViewStore';
 import { Sprite } from '../../viewmodel/Sprite';
 import { CommentBubble } from './CommentBubble';
 import { Direction } from '../../domain/user/Direction';
 import { UserState } from '../../domain/user/UserState';
-import { getRandomPositionInArea } from '../../domain/area/Area';
+import { getRandomPositionInArea, getAreaRect } from '../../domain/area/Area';
 
 type Props = { 
   user: UserModel;
@@ -31,12 +31,17 @@ export const UserCard = ({ user }: Props) => {
   }, [view, user.area, user.id]);
 
   if (!view) return null;
-  const { x, y } = view.position;
+
+  // エリアの絶対座標を取得
+  const areaRect = getAreaRect(user.area);
+  // エリア内相対座標 + エリアのオフセット = AreaField内の絶対座標
+  const absoluteX = areaRect.x + view.position.x;
+  const absoluteY = areaRect.y + view.position.y;
 
   return (
     <div
       className="absolute pointer-events-none"
-      style={{ left: x, top: y, zIndex: 50 }}
+      style={{ left: absoluteX, top: absoluteY, zIndex: 50 }}
     >
       {/* コメントバブル(必要なら 0, -24 などでオフセット) */}
       {view.comment && (

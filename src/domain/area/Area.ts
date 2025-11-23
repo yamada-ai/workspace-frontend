@@ -70,13 +70,15 @@ export const getAreaByPosition = (x: number, y: number): Area | null => {
 };
 
 
-/** 
+/**
  * area 内に spriteMargin(=50)のマージンを見て
  * 相対座標でランダム位置を返す (0 <= x <= width - margin)
+ * topMarginでTierラベル用の上部マージンを確保
  */
 export const getRandomPositionInArea = (
   area: Area,
-  spriteMargin: number = 50
+  spriteMargin: number = 50,
+  topMargin: number = 30
 ): { x: number; y: number } => {
   const { width, height } = getAreaRect(area);
 
@@ -85,7 +87,7 @@ export const getRandomPositionInArea = (
 
   return {
     x: Math.floor(Math.random() * maxX),  // すでに相対
-    y: Math.floor(Math.random() * maxY),
+    y: Math.floor(Math.random() * (maxY - topMargin)) + topMargin,  // Tierラベル分を避ける
   };
 };
 

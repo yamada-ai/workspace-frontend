@@ -10,32 +10,33 @@ import { UserCard } from './UserCard';
 
 export const AreaField = () => {
   const getAllUsers = useUserStore((s) => s.getAllUsers);
+  const allUsers = getAllUsers();
 
   return (
     <div
       className="relative border border-gray-300"
       style={{ width: fieldWidth, height: fieldHeight }}
     >
+      {/* エリアの背景 */}
       {Object.values(Area).map((area, idx) => {
         const { x, y, width, height } = getAreaRect(area);
         const style = getAreaStyle(area);
-        const users = getAllUsers().filter((u) => u.area === area);
 
         return (
           <div
             key={area}
-            className="absolute border border-gray-500 overflow-visible"
-            style={{ left: x, top: y, width, height, zIndex: idx * 10, ...style }}
+            className="absolute border border-gray-500"
+            style={{ left: x, top: y, width, height, zIndex: idx, ...style }}
           >
-            <p className="text-xs text-center bg-white">{area}</p>
-            <div className="relative w-full h-full" style={{ zIndex: idx * 10 + 1 }}>
-              {users.map((u) => (
-                <UserCard key={u.id} user={u} />
-              ))}
-            </div>
+            <p className="text-xs text-center bg-white px-2 py-0.5 inline-block shadow-sm">{area}</p>
           </div>
         );
       })}
+
+      {/* UserCardは全てAreaFieldの直下に配置（全エリア背景より上に表示） */}
+      {allUsers.map((user) => (
+        <UserCard key={user.id} user={user} />
+      ))}
     </div>
   );
 };
