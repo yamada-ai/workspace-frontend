@@ -19,7 +19,7 @@ export const useUserViewStore = create<UserViewState>((set, get) => ({
   views: {},
   setComment: (id, comment) => {
     const now = Date.now();
-    const until = now + 5000;
+    const until = now + 2500;
     set((state) => {
       const prev = state.views[id] ?? {
         id,
