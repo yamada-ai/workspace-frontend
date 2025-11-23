@@ -25,7 +25,7 @@ export function handleSessionStart(msg: SessionStartEvent) {
   const icon = msg.icon || "princess.png";
 
   const user = new UserModel(
-    msg.id as ID<UserModel>,
+    msg.user_id as ID<UserModel>,  // user_idを使う（session idではない）
     msg.user_name,
     msg.work_name,
     icon,
@@ -38,14 +38,30 @@ export function handleSessionStart(msg: SessionStartEvent) {
 
 // セッション終了時の処理
 export function handleSessionEnd(msg: SessionEndEvent) {
-  const { removeUser } = useUserStore.getState();
-  const { removeView } = useUserViewStore.getState();
+  const { getUser, removeUser } = useUserStore.getState();
+  const { setComment, setFadingOut, removeView } = useUserViewStore.getState();
 
-  console.log(`🚪 セッション終了: user_id=${msg.user_id}, session_id=${msg.session_id}`);
+  const userId = msg.user_id as ID<UserModel>;
+  const user = getUser(userId);
 
-  // ユーザーをストアから削除
-  removeUser(msg.user_id as ID<UserModel>);
+  console.log(`🚪 セッション終了: user_id=${msg.user_id}, session_id=${msg.id}`);
 
-  // ビュー情報も削除
-  removeView(msg.user_id);
+  if (!user) {
+    console.warn(`User ${userId} not found for SessionEnd`);
+    return;
+  }
+
+  // 1. コメントバブルで終了メッセージを表示（5秒間）
+  setComment(userId, `${user.name}が作業を終了しました`);
+
+  // 2. 3秒後にフェードアウトアニメーション開始
+  setTimeout(() => {
+    setFadingOut(userId, true);
+  }, 3000);
+
+  // 3. 4秒後（フェードアウト完了後）にDOMから削除
+  setTimeout(() => {
+    removeUser(userId);
+    removeView(userId);
+  }, 4000);
 }

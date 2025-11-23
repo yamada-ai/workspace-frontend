@@ -41,7 +41,13 @@ export const UserCard = ({ user }: Props) => {
   return (
     <div
       className="absolute pointer-events-none"
-      style={{ left: absoluteX, top: absoluteY, zIndex: 50 }}
+      style={{
+        left: absoluteX,
+        top: absoluteY,
+        zIndex: 50,
+        opacity: view.isFadingOut ? 0 : 1,
+        transition: 'opacity 1s ease-out',
+      }}
     >
       {/* コメントバブル(必要なら 0, -24 などでオフセット) */}
       {view.comment && (

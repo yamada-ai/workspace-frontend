@@ -8,7 +8,9 @@ type UserViewState = {
   views: Record<string, UserView>;
   setComment: (userId: ID<UserModel>, comment: string) => void;
   setDirection: (userId: ID<UserModel>, direction: Direction) => void;
-  setPosition: (id: ID<UserModel>, x: number, y: number) => void
+  setPosition: (id: ID<UserModel>, x: number, y: number) => void;
+  setFadingOut: (id: ID<UserModel>, isFading: boolean) => void;
+  removeView: (id: ID<UserModel>) => void;
   clearExpiredComments: () => void;
   getView: (userId: ID<UserModel>) => UserView | undefined;
 };
@@ -63,8 +65,29 @@ export const useUserViewStore = create<UserViewState>((set, get) => ({
       },
     }));
   },
-  
-  
+
+  setFadingOut: (id, isFading) => {
+    set((state) => {
+      const prev = state.views[id];
+      if (!prev) return state;
+      return {
+        views: {
+          ...state.views,
+          [id]: {
+            ...prev,
+            isFadingOut: isFading,
+          },
+        },
+      };
+    });
+  },
+
+  removeView: (id) =>
+    set((state) => {
+      const { [id]: _, ...rest } = state.views;
+      return { views: rest };
+    }),
+
   clearExpiredComments: () => {
     const now = Date.now();
     set((state) => {
