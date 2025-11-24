@@ -9,7 +9,8 @@ export class UserModel {
     public work_name: string | null,
     public icon: string,
     public state: UserState = UserState.Idle,
-    public area: Area = Area.Tier3
+    public area: Area = Area.Tier3,
+    public plannedEnd: Date | null = null
   ) {}
 
   copyWith(update: Partial<Omit<UserModel, 'id'>>): UserModel {
@@ -19,7 +20,8 @@ export class UserModel {
       update.work_name ?? this.work_name,
       update.icon ?? this.icon,
       update.state ?? this.state,
-      update.area ?? this.area
+      update.area ?? this.area,
+      update.plannedEnd ?? this.plannedEnd
     );
   }
 

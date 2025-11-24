@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { ellipsis } from '../../domain/utils/string';
 import { UserModel } from '../../domain/user/UserModel';
 import { useUserViewStore } from '../../infra/cache/UserViewStore';
@@ -29,6 +29,24 @@ export const UserCard = ({ user }: Props) => {
       useUserViewStore.getState().setPosition(user.id, pos.x, pos.y);
     }
   }, [view, user.area, user.id]);
+
+  const [remainingMinutes, setRemainingMinutes] = useState<number | null>(() =>
+    user.plannedEnd
+      ? Math.max(0, Math.floor((user.plannedEnd.getTime() - Date.now()) / 60000))
+      : null
+  );
+
+  useEffect(() => {
+    if (!user.plannedEnd) return;
+    const updateRemaining = () => {
+      setRemainingMinutes(
+        Math.max(0, Math.floor((user.plannedEnd!.getTime() - Date.now()) / 60000))
+      );
+    };
+    updateRemaining();
+    const timer = setInterval(updateRemaining, 60 * 1000);
+    return () => clearInterval(timer);
+  }, [user.plannedEnd]);
 
   if (!view) return null;
 
@@ -70,6 +88,9 @@ export const UserCard = ({ user }: Props) => {
         <div className="text-sm text-gray-800 whitespace-nowrap">
           <p className="font-medium">{ellipsis(user.name, 20)}</p>
           <p className="text-xs">{ellipsis(user.work_name ?? '', 20)}</p>
+          {remainingMinutes !== null && (
+            <p className="text-[11px] text-gray-600">残り {remainingMinutes}分</p>
+          )}
         </div>
       </div>
     </div>

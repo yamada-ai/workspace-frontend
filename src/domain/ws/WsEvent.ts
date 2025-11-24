@@ -3,6 +3,7 @@ export enum WsEventType {
   SessionStart = 'session_start',
   SessionEnd = 'session_end',
   SessionExtend = 'session_extend',
+  WorkNameChange = 'work_name_change',
   // …将来増えるイベントをここに追加
 }
 
@@ -29,5 +30,23 @@ export interface SessionEndEvent extends BaseWsEvent {
   actual_end: string;
 }
 
+export interface SessionExtendEvent extends BaseWsEvent {
+  type: WsEventType.SessionExtend;
+  id: number;
+  user_id: number;
+  new_planned_end: string;
+}
+
+export interface WorkNameChangeEvent extends BaseWsEvent {
+  type: WsEventType.WorkNameChange;
+  id: number;
+  user_id: number;
+  work_name: string;
+}
+
 // 全体のユニオン
-export type WsEvent = SessionStartEvent | SessionEndEvent /* | … */;
+export type WsEvent =
+  | SessionStartEvent
+  | SessionEndEvent
+  | SessionExtendEvent
+  | WorkNameChangeEvent /* | … */;
