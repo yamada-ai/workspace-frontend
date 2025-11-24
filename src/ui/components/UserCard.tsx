@@ -8,7 +8,7 @@ import { Direction } from '../../domain/user/Direction';
 import { UserState } from '../../domain/user/UserState';
 import { getRandomPositionInArea, getAreaRect } from '../../domain/area/Area';
 
-type Props = { 
+type Props = {
   user: UserModel;
 };
 
@@ -61,11 +61,7 @@ export const UserCard = ({ user }: Props) => {
         className="flex items-center space-x-2 bg-white bg-opacity-90 p-1 rounded-lg shadow-md"
         style={{ position: 'absolute', left: 12, top: 0 }}
       >
-        <div
-          className={`w-8 h-8 ${
-            user.state === UserState.Dancing ? 'animate-wiggle' : ''
-          }`}
-        >
+        <div className={`w-8 h-8 ${user.state === UserState.Dancing ? 'animate-wiggle' : ''}`}>
           <Sprite
             direction={view.direction ?? Direction.Down}
             isWalking={user.state === UserState.Walking}

@@ -1,10 +1,4 @@
-import {
-  Area,
-  getAreaRect,
-  getAreaStyle,
-  fieldWidth,
-  fieldHeight,
-} from '../../domain/area/Area';
+import { Area, getAreaRect, getAreaStyle, fieldWidth, fieldHeight } from '../../domain/area/Area';
 import { useUserStore } from '../../infra/cache/useUserStore';
 import { UserCard } from './UserCard';
 
@@ -28,7 +22,9 @@ export const AreaField = () => {
             className="absolute border border-gray-500"
             style={{ left: x, top: y, width, height, zIndex: idx, ...style }}
           >
-            <p className="text-xs text-center bg-white px-2 py-0.5 inline-block shadow-sm">{area}</p>
+            <p className="text-xs text-center bg-white px-2 py-0.5 inline-block shadow-sm">
+              {area}
+            </p>
           </div>
         );
       })}

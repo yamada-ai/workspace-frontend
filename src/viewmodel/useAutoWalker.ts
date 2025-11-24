@@ -22,12 +22,7 @@ export const useAutoWalker = () => {
         if (!view || !user.canWalk()) return;
 
         if (Math.random() < 0.4) {
-          const dirs: Direction[] = [
-            Direction.Up,
-            Direction.Down,
-            Direction.Left,
-            Direction.Right,
-          ];
+          const dirs: Direction[] = [Direction.Up, Direction.Down, Direction.Left, Direction.Right];
           // 現在と違う方向をランダム選択
           const choices = dirs.filter((d) => d !== view.direction);
           const newDir = choices[Math.floor(Math.random() * choices.length)];

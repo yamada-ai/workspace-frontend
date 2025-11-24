@@ -24,7 +24,7 @@ export class UserModel {
   }
 
   canDance(): boolean {
-    return this.state === UserState.Idle ;
+    return this.state === UserState.Idle;
   }
 
   dance(): UserModel {
@@ -33,7 +33,7 @@ export class UserModel {
   }
 
   canWalk(): boolean {
-    return this.state === UserState.Idle || this.state === UserState.Walking
+    return this.state === UserState.Idle || this.state === UserState.Walking;
   }
 
   walk(): UserModel {

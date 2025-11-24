@@ -1,14 +1,10 @@
 // src/infra/socket/useSocket.ts
-import { useEffect } from "react";
-import { useUserStore } from "../cache/useUserStore";
-import { WsEvent, WsEventType } from "../../domain/ws/WsEvent";
-import { registerUser } from "../../app/registerUser";
-import { handleSessionStart, handleSessionEnd } from "./handlers";
-import { fetchActiveSessions } from "../api/sessions";
+import { useEffect } from 'react';
+import { WsEvent, WsEventType } from '../../domain/ws/WsEvent';
+import { handleSessionStart, handleSessionEnd } from './handlers';
+import { fetchActiveSessions } from '../api/sessions';
 
 export const useSocket = () => {
-  const { updateUser } = useUserStore();
-
   useEffect(() => {
     // 初期ロード: 既存のアクティブセッションを取得
     fetchActiveSessions()
@@ -30,7 +26,7 @@ export const useSocket = () => {
         });
       })
       .catch((err) => {
-        console.error("❌ 初期ロード失敗:", err);
+        console.error('❌ 初期ロード失敗:', err);
       });
 
     // 環境変数からWebSocket URLを取得、デフォルトは相対パス（Nginx経由）
@@ -39,37 +35,38 @@ export const useSocket = () => {
     const socket = new WebSocket(wsUrl);
 
     socket.onopen = () => {
-      console.log("✅ WebSocket接続成功");
+      console.log('✅ WebSocket接続成功');
     };
 
     socket.onmessage = (e) => {
-        const msg = JSON.parse(e.data) as WsEvent;
-        console.log("📩 WebSocket受信:", msg);
-  
-        switch (msg.type) {
-          case WsEventType.SessionStart:
-            handleSessionStart(msg);
-            break;
-          case WsEventType.SessionEnd:
-            handleSessionEnd(msg);
-            break;
-          default:
-            // 型が足りているかコンパイル時にチェック
-            const _exhaustive: never = msg;
-            return _exhaustive;
+      const msg = JSON.parse(e.data) as WsEvent;
+      console.log('📩 WebSocket受信:', msg);
+
+      switch (msg.type) {
+        case WsEventType.SessionStart:
+          handleSessionStart(msg);
+          break;
+        case WsEventType.SessionEnd:
+          handleSessionEnd(msg);
+          break;
+        default: {
+          // 型が足りているかコンパイル時にチェック
+          const _exhaustive: never = msg;
+          return _exhaustive;
         }
-      };
+      }
+    };
 
     socket.onerror = (err) => {
-      console.error("❌ WebSocketエラー:", err);
+      console.error('❌ WebSocketエラー:', err);
     };
 
     socket.onclose = () => {
-      console.warn("⚠️ WebSocket切断");
+      console.warn('⚠️ WebSocket切断');
     };
 
     return () => {
       socket.close();
     };
-  }, [registerUser, updateUser]);
+  }, []);
 };
