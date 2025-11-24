@@ -1,5 +1,10 @@
 import { WsEvent, WsEventType } from '../../domain/ws/WsEvent';
-import { handleSessionEnd, handleSessionStart } from './handlers';
+import {
+  handleSessionEnd,
+  handleSessionExtend,
+  handleSessionStart,
+  handleWorkNameChange,
+} from './handlers';
 
 export const dispatchWsEvent = (msg: WsEvent) => {
   console.log('📩 WebSocket受信:', msg);
@@ -10,6 +15,12 @@ export const dispatchWsEvent = (msg: WsEvent) => {
       return;
     case WsEventType.SessionEnd:
       handleSessionEnd(msg);
+      return;
+    case WsEventType.SessionExtend:
+      handleSessionExtend(msg);
+      return;
+    case WsEventType.WorkNameChange:
+      handleWorkNameChange(msg);
       return;
     default: {
       // 将来イベント追加時にコンパイルで検知

@@ -1,4 +1,9 @@
-import { SessionStartEvent, SessionEndEvent } from '../../domain/ws/WsEvent';
+import {
+  SessionStartEvent,
+  SessionEndEvent,
+  SessionExtendEvent,
+  WorkNameChangeEvent,
+} from '../../domain/ws/WsEvent';
 import { UserModel } from '../../domain/user/UserModel';
 import { ID } from '../../domain/ID';
 import { UserState } from '../../domain/user/UserState';
@@ -34,7 +39,8 @@ export function handleSessionStart(msg: SessionStartEvent) {
     msg.work_name,
     icon,
     UserState.Idle,
-    area
+    area,
+    msg.planned_end ? new Date(msg.planned_end) : null
   );
   registerUser(user);
   setComment(user.id, `${msg.user_name}が「${msg.work_name}」開始`);
@@ -68,4 +74,28 @@ export function handleSessionEnd(msg: SessionEndEvent) {
     removeUser(userId);
     removeView(userId);
   }, 4000);
+}
+
+// セッション延長時の処理
+export function handleSessionExtend(msg: SessionExtendEvent) {
+  const { getUser, updateUser } = useUserStore.getState();
+  const userId = msg.user_id as ID<UserModel>;
+  const user = getUser(userId);
+  if (!user) return;
+
+  const updated = user.copyWith({ plannedEnd: new Date(msg.new_planned_end) });
+  updateUser(updated);
+}
+
+// 作業名変更時の処理
+export function handleWorkNameChange(msg: WorkNameChangeEvent) {
+  const { getUser, updateUser } = useUserStore.getState();
+  const { setComment } = useUserViewStore.getState();
+  const userId = msg.user_id as ID<UserModel>;
+  const user = getUser(userId);
+  if (!user) return;
+
+  const updated = user.copyWith({ work_name: msg.work_name });
+  updateUser(updated);
+  setComment(userId, `${user.name}が「${msg.work_name}」に変更`);
 }
