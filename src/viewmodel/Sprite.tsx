@@ -15,7 +15,7 @@ const DIRECTION_ROW_MAP: Record<Direction, number> = {
 export const Sprite = ({ direction, isWalking }: Props) => {
   const spriteSize = 32;
   const row = DIRECTION_ROW_MAP[direction];
-  
+
   return (
     <div
       className={`sprite ${isWalking ? 'walking' : ''}`}

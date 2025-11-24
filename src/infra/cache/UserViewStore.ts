@@ -84,8 +84,9 @@ export const useUserViewStore = create<UserViewState>((set, get) => ({
 
   removeView: (id) =>
     set((state) => {
-      const { [id]: _, ...rest } = state.views;
-      return { views: rest };
+      const nextViews = { ...state.views };
+      delete nextViews[id];
+      return { views: nextViews };
     }),
 
   clearExpiredComments: () => {

@@ -1,8 +1,8 @@
 // src/domain/ws/WsEventType.ts
 export enum WsEventType {
-  SessionStart = "session_start",
-  SessionEnd = "session_end",
-  SessionExtend = "session_extend",
+  SessionStart = 'session_start',
+  SessionEnd = 'session_end',
+  SessionExtend = 'session_extend',
   // …将来増えるイベントをここに追加
 }
 

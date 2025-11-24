@@ -49,26 +49,17 @@ export const getAreaStyle = (area: Area): React.CSSProperties => {
  * spriteMargin × spriteMargin のスプライトが
  * 完全に area 内に収まるか返す
  */
-export const isInArea = (
-  x: number,
-  y: number,
-  area: Area,
-  spriteMargin: number = 50
-): boolean => {
+export const isInArea = (x: number, y: number, area: Area, spriteMargin: number = 50): boolean => {
   const { width, height } = getAreaRect(area);
-  return (
-    x >= 0 &&
-    y >= 0 &&
-    x + spriteMargin <= width &&
-    y + spriteMargin <= height
-  );
+  return x >= 0 && y >= 0 && x + spriteMargin <= width && y + spriteMargin <= height;
 };
 
 export const getAreaByPosition = (x: number, y: number): Area | null => {
-  return (Object.entries(areaMap) as [Area, AreaMeta][])
-    .find(([area, _]) => isInArea(x, y, area))?.[0] ?? null;
+  return (
+    (Object.entries(areaMap) as [Area, AreaMeta][]).find(([area]) => isInArea(x, y, area))?.[0] ??
+    null
+  );
 };
-
 
 /**
  * area 内に spriteMargin(=50)のマージンを見て
@@ -82,15 +73,15 @@ export const getRandomPositionInArea = (
 ): { x: number; y: number } => {
   const { width, height } = getAreaRect(area);
 
-  const maxX = width  - spriteMargin;
+  const maxX = width - spriteMargin;
   const maxY = height - spriteMargin;
 
   return {
-    x: Math.floor(Math.random() * maxX),  // すでに相対
-    y: Math.floor(Math.random() * (maxY - topMargin)) + topMargin,  // Tierラベル分を避ける
+    x: Math.floor(Math.random() * maxX), // すでに相対
+    y: Math.floor(Math.random() * (maxY - topMargin)) + topMargin, // Tierラベル分を避ける
   };
 };
 
 // 📐 全体フィールドの最大サイズ（自動算出）
-export const fieldWidth = Math.max(...Object.values(areaMap).map(a => a.rect.x + a.rect.width));
-export const fieldHeight = Math.max(...Object.values(areaMap).map(a => a.rect.y + a.rect.height));
+export const fieldWidth = Math.max(...Object.values(areaMap).map((a) => a.rect.x + a.rect.width));
+export const fieldHeight = Math.max(...Object.values(areaMap).map((a) => a.rect.y + a.rect.height));

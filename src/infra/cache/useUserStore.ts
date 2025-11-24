@@ -21,8 +21,9 @@ export const useUserStore = create<UserState>((set, get) => ({
     })),
   removeUser: (id) =>
     set((state) => {
-      const { [id]: _, ...rest } = state.users;
-      return { users: rest };
+      const nextUsers = { ...state.users };
+      delete nextUsers[id];
+      return { users: nextUsers };
     }),
   getUser: (id) => get().users[id],
   getAllUsers: () => Object.values(get().users),

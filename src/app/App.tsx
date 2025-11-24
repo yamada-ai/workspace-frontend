@@ -4,8 +4,6 @@ import { AreaField } from '../ui/components/AreaField';
 
 import './App.css';
 
-
-
 export const App = () => {
   // WebSocketとアクティブセッションの初期ロードを開始
   useSocket();

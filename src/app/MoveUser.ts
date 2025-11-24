@@ -1,9 +1,9 @@
-import { isInArea } from "../domain/area/Area";
-import { ID } from "../domain/ID";
-import { Direction } from "../domain/user/Direction";
-import { UserModel } from "../domain/user/UserModel";
-import { useUserViewStore } from "../infra/cache/UserViewStore";
-import { useUserStore } from "../infra/cache/useUserStore";
+import { isInArea } from '../domain/area/Area';
+import { ID } from '../domain/ID';
+import { Direction } from '../domain/user/Direction';
+import { UserModel } from '../domain/user/UserModel';
+import { useUserViewStore } from '../infra/cache/UserViewStore';
+import { useUserStore } from '../infra/cache/useUserStore';
 
 const directionToDelta: Record<Direction, { dx: number; dy: number }> = {
   [Direction.Up]: { dx: 0, dy: -5 },
@@ -13,9 +13,9 @@ const directionToDelta: Record<Direction, { dx: number; dy: number }> = {
 };
 
 export const moveUser = (id: ID<UserModel>) => {
-  const user = useUserStore.getState().getUser(id)
+  const user = useUserStore.getState().getUser(id);
   const view = useUserViewStore.getState().getView(id);
-  if (!user?.canWalk() ||  !view) return;
+  if (!user?.canWalk() || !view) return;
 
   const delta = directionToDelta[view.direction];
   const newX = view.position.x + delta.dx;

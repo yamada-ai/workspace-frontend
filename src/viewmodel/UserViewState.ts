@@ -1,4 +1,4 @@
-import { UserView } from "./UserView";
+import { UserView } from './UserView';
 
 export type UserViewState = {
   views: Record<string, UserView>;
